@@ -55,14 +55,13 @@ begin
 
   print_current_cards(players_cards, dealers_cards)
 
-  player_stay = false
   player_bust = false
   player_blackjack = check_for_blackjack(players_cards)
   players_cards_total = total_of_cards(players_cards)
 
   puts "You have Blackjack!" if player_blackjack
 
-  while (!player_stay) && (!player_bust) && (!player_blackjack)
+  while (!player_bust) && (!player_blackjack)
     puts "You have #{players_cards_total}."
 
     if players_cards_total > BLACKJACK
@@ -76,7 +75,6 @@ begin
       puts "Would you like to hit or stay?"
       action = gets.chomp.downcase
       if action == 's' || action == 'stay'
-        player_stay = true
         break
       elsif action == 'h' || action == 'hit'
         players_cards << game_deck.pop
@@ -89,7 +87,6 @@ begin
     players_cards_total = total_of_cards(players_cards)
   end
 
-  dealer_stay = false
   dealer_bust = false
   dealer_blackjack = check_for_blackjack(dealers_cards)
   dealers_cards_total = total_of_cards(dealers_cards)
@@ -100,7 +97,7 @@ begin
     puts "Dealer has Blackjack!" if dealer_blackjack
   end
 
-  while (!dealer_stay) && (!player_bust) && (!player_blackjack) && (!dealer_blackjack)
+  while (!player_bust) && (!player_blackjack) && (!dealer_blackjack)
 
     puts "The dealer has #{dealers_cards_total}."
 
@@ -111,7 +108,7 @@ begin
     end
 
     if dealers_cards_total >= DEALER_MUST_STAY
-      dealer_stay = true
+      break
     else
       puts "The dealer hits."
       sleep 2
