@@ -69,7 +69,6 @@ begin
       player_bust = true
       break
     elsif players_cards_total == BLACKJACK
-      sleep 2
       break
     else
       puts "Would you like to hit or stay?"
@@ -79,6 +78,7 @@ begin
       elsif action == 'h' || action == 'hit'
         players_cards << game_deck.pop
         puts "\nYou were dealt #{players_cards[-1]}"
+        sleep 2
         print_current_cards(players_cards, dealers_cards)
       else
         puts "That's not a valid action."
