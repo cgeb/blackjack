@@ -19,7 +19,7 @@ def print_dealers_cards(dealers_cards)
   puts "The dealers cards are \n #{dealers_cards}"
 end
 
-def is_there_an_ace(hand)
+def is_there_an_ace?(hand)
   ace = false
   hand.each do |card|
     if card[0] == 'A'
@@ -34,14 +34,14 @@ def total_of_cards(hand)
   hand.each do |card|   
     total += CARD_VALUE_HASH[card[0]]
   end
-  if total < 12 && is_there_an_ace(hand) == true
+  if total < 12 && is_there_an_ace?(hand)
     total += 10
   end
   total
 end
 
 def check_for_blackjack(hand)
-  blackjack = true if (hand.count(2) && total_of_cards(hand) == BLACKJACK)
+  hand.count(2) && total_of_cards(hand) == BLACKJACK
 end
     
 game_deck = create_decks(cards, suits)
@@ -61,7 +61,7 @@ begin
 
   puts "You have Blackjack!" if player_blackjack
 
-  while (!player_bust) && (!player_blackjack)
+  while !player_bust && !player_blackjack
     puts "You have #{players_cards_total}."
 
     if players_cards_total > BLACKJACK
@@ -73,9 +73,9 @@ begin
     else
       puts "Would you like to hit or stay?"
       action = gets.chomp.downcase
-      if action == 's' || action == 'stay'
+      if ['s', 'stay'].include?(action)
         break
-      elsif action == 'h' || action == 'hit'
+      elsif ['h', 'hit'].include?(action)
         players_cards << game_deck.pop
         puts "\nYou were dealt #{players_cards[-1]}"
         sleep 2
@@ -97,7 +97,7 @@ begin
     puts "Dealer has Blackjack!" if dealer_blackjack
   end
 
-  while (!player_bust) && (!player_blackjack) && (!dealer_blackjack)
+  while !player_bust && !player_blackjack && !dealer_blackjack
 
     puts "The dealer has #{dealers_cards_total}."
 
@@ -121,7 +121,7 @@ begin
 
   if (!player_bust && players_cards_total > dealers_cards_total) || dealer_bust || (player_blackjack && !dealer_blackjack)
     puts "You win!"
-  elsif (!player_blackjack && dealer_blackjack)
+  elsif !player_blackjack && dealer_blackjack
     puts "You lose!"
   elsif (players_cards_total == dealers_cards_total) || (player_blackjack && dealer_blackjack)
     puts "It's a tie!"
@@ -133,6 +133,6 @@ begin
   puts "\nDo you want to play again? (Y/N)"
   continue_playing = gets.chomp.downcase
 
-end while (continue_playing == 'y' || continue_playing == 'yes')
+end while ['y', 'yes'].include?(continue_playing)
 
 puts "Good bye"
