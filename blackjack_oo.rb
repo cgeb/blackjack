@@ -16,9 +16,9 @@ class Deck
 
   def initialize(number_of_decks)
     @game_decks = []
-    [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'].each do |fv|
-      ['hearts', 'clubs', 'diamonds', 'spades'].each do |s|
-        number_of_decks.times {@game_decks << Card.new(fv, s)}
+    [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'].each do |face_value|
+      ['hearts', 'clubs', 'diamonds', 'spades'].each do |suit|
+        number_of_decks.times {@game_decks << Card.new(face_value, suit)}
       end
     end
     game_decks.shuffle!
@@ -35,7 +35,7 @@ module Hand
     cards.each do |card|
       if card.face_value == 'A'
         total += 11
-      elsif card.face_value == 'J' || card.face_value == 'Q' || card.face_value == 'K'
+      elsif %w(J Q K).include?(card.face_value)
         total += 10
       else
         total += card.face_value
@@ -114,25 +114,25 @@ class Game
   end
 
   def deal_cards
-    player.add_card(deck.deal_card)
-    dealer.add_card(deck.deal_card)
-    player.add_card(deck.deal_card)
-    dealer.add_card(deck.deal_card)
+    2.times do
+      player.add_card(deck.deal_card)
+      dealer.add_card(deck.deal_card)
+    end
   end
 
   def player_turn
-    while !player.bust
+    until player.bust
       if player.total == BLACKJACK_AMOUNT
         puts "You have 21!" 
         break
       end
       puts "Would you like to hit or stay?"
       answer = gets.chomp.downcase
-      if answer == 'h' || answer == 'hit'
+      if %w(h hit).include?(answer)
         player.add_card(deck.deal_card)
         puts "#{player.name} is dealt #{player.cards[-1]}"
         player.show_hand
-      elsif answer == 's' || answer == 'stay'
+      elsif %w(s stay).include?(answer)
         break
       else
         puts "I don't understand that."
@@ -156,7 +156,7 @@ class Game
   def new_game
     puts "Would you like to play again?"
     answer = gets.chomp.downcase
-    if answer == 'y' || answer == 'yes'
+    if %w(y yes).include?(answer)
       player.cards = []
       dealer.cards = []
       play
@@ -196,12 +196,12 @@ class Game
     dealer.show_one_card
     player_turn
     sleep 1
-    dealer_turn if !player.bust
-    compare_hands if !player.bust && !dealer.bust
+    dealer_turn unless player.bust
+    compare_hands unless player.bust || dealer.bust
     new_game
   end
 end
 
-game = Game.new.play
+Game.new.play
 
 
